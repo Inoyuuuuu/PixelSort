@@ -1,24 +1,32 @@
 PImage img;
 PImage sortedImg;
 
+boolean isAnimationEnabled = false;
+int sortCriteria = 4;                     //sortCriteria: 0 brightness, 1 HUE, 2 saturation, 3 red value, 4 blue value, 5 green value
+String imageName = "fish.jpg";             //imageSizes: bee=200x200, catS=300x300, fish=500x50, cat=600x600, foxS=600x600, flowers=800x800, butterfly=800x1200, frog=800x1200, fox=1300x1300, kingfisher= 2200x2200
+
 ArrayList<int[]> processImgsPixels = new ArrayList();
 int imageCounter = 0;
 int processImgsSize = 0;
 
-float fps = 10;
+float fpsAnimation = 120;
+float fps = 1;
 int mergeCounterMax = 300;
 int mergeCounter = 0;
 
 void setup() {
   size(800, 600);
-  frameRate(120);
+  frameRate(fps);
   background(255);
   smooth();
   
-  img = loadImage("cat.jpg");
+  if (isAnimationEnabled) {
+    frameRate(fpsAnimation);
+  }
+  
+  img = loadImage(imageName);
   sortedImg = createImage(img.width, img.height, RGB);
   sortedImg = img.get();
-  //sortedImg.loadPixels();
   
   windowResize(img.width * 2, img.height);
 
@@ -30,8 +38,10 @@ void setup() {
   mergesortTime = (millis() / 1000) - mergesortTime;
   println("reverse mergesort done in " + mergesortTime + " seconds!");
   
-  snapshotImage(sortedImg.pixels, true);
-  processImgsSize = processImgsPixels.size();
+  if (isAnimationEnabled) {
+    snapshotImage(sortedImg.pixels, true);
+    processImgsSize = processImgsPixels.size();
+  }
 }
 
 void mergesort(int[] a, int left, int right) {
@@ -41,7 +51,9 @@ void mergesort(int[] a, int left, int right) {
     mergesort(a, middle + 1, right);
     mergeTogether(a, left, middle, right);
     
-    snapshotImage(a, false);
+    if (isAnimationEnabled) {
+      snapshotImage(a, false);
+    }
   } //<>//
 }
 
@@ -55,7 +67,7 @@ void mergeTogether(int[] a, int left, int middle, int right) {
 
   for (int i = left; i <= right; i++) {
 
-    if (compareBright(a[iL], a[iR]) <= 0) { //------------------------------------ hier ist compare
+    if (comparePixel(a[iL], a[iR], sortCriteria) <= 0) { //------------------------------------ hier ist compare
       sortedArray[i] = a[iL];
       iL++;
     } else {
@@ -91,7 +103,25 @@ void snapshotImage(int[] a, boolean isLastImg) {
     
     mergeCounter++;
 }
-  
+
+int comparePixel(int a, int b, int sortCriteria) {
+  switch (sortCriteria) {
+  case 0: 
+    return compareBright(a, b);
+  case 1:
+    return compareHue(a, b);
+  case 2:
+    return compareSat(a, b);
+  case 3:
+    return compareRed(a, b);
+  case 4:
+    return compareGreen(a, b);
+  case 5:
+    return compareBlue(a, b);
+  default:
+      return compareBright(a, b);
+  }
+}
 
 int compareBright(int a, int b) {
   float brightnessA = brightness(a);
@@ -167,14 +197,23 @@ int compareBlue(int a, int b) {
 
 void draw() {
   
-  if (imageCounter >= processImgsSize - 1) {
-    imageCounter = processImgsSize - 1;
-  }
+  if (isAnimationEnabled) {
+    if (imageCounter >= processImgsSize - 1) {
+      imageCounter = processImgsSize - 1;
+      frameRate(1);
+      save("output.png");
+    }
+    
+    PImage img2 = createImage(img.width, img.height, RGB);
+    img2.pixels = processImgsPixels.get(imageCounter);
+    imageCounter ++;
   
-  PImage img2 = createImage(img.width, img.height, RGB);
-  img2.pixels = processImgsPixels.get(imageCounter);
-  imageCounter ++;
-
-  image(img, 0, 0);
-  image(img2, img.width, 0);
+    image(img, 0, 0);
+    image(img2, img.width, 0);
+  }
+  else {
+    image(img, 0, 0);
+    image(sortedImg, img.width, 0);
+    save("output.png");
+  }
 }
