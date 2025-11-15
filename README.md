@@ -1,4 +1,4 @@
-#PixelSort
+PixelSort
 
 >All original images in the "Data" folder were taken from Pixabay.com and are free for use under the Pixabay \[Content License](https://pixabay.com/service/license-summary/).
 
