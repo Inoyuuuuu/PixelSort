@@ -2,7 +2,7 @@ PImage img;
 PImage sortedImg;
 
 boolean isAnimationEnabled = false;
-int sortCriteria = 4;                     //sortCriteria: 0 brightness, 1 HUE, 2 saturation, 3 red value, 4 blue value, 5 green value
+int sortCriteria = 0;                     //sortCriteria: 0 brightness, 1 HUE, 2 saturation, 3 red value, 4 blue value, 5 green value
 String imageName = "fish.jpg";             //imageSizes: bee=200x200, catS=300x300, fish=500x50, cat=600x600, foxS=600x600, flowers=800x800, butterfly=800x1200, frog=800x1200, fox=1300x1300, kingfisher= 2200x2200
 
 ArrayList<int[]> processImgsPixels = new ArrayList();
