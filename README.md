@@ -1,6 +1,12 @@
 # PixelSort
 A java project that sorts pixel based on brightness (customizable) with reverse mergesort (or other algorithms if implemented) and displays an animation afterwards that shows the process of the algorithm sorting the pixels. This project was made in [Processing 4](https://processing.org/).
 
+#### Sorting Algorithm
+The sorting algorithm can be adjusted via the value of "sortingAlgorithm":
+- 0 reverse Mergesort
+- 1 dictator sort
+- 2 binary insertion sort
+
 #### Sorting Crtiteria
 The sorting crtiteria can be adjusted via the value of "sortCriteria":
 - 0 brightness
